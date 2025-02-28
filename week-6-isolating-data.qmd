@@ -1,0 +1,142 @@
+---
+title: "Isolating Data"
+format: html
+execute: 
+  echo: true
+  message: false
+---
+
+
+```{r}
+#| label: setup
+library(tidyverse)
+```
+
+
+# dplyr
+
+## Import `babynames` Data  
+
+Note, this data comes from the [US Social Security](https://www.ssa.gov/oact/babynames/) website and was created with code adapted from [Hadley Wickham](https://github.com/hadley/babynames/blob/master/data-raw/names.R), but updated to reflect the top 500 names per year. 
+
+```{r}
+#| label: load-babynames 
+
+babynames <- read_csv("babynames_500.csv")
+
+```
+
+
+
+## Your Turn 1
+
+Alter the code to select just the `n` column:
+
+```{r}
+select(babynames, name, prop)
+```
+
+## Quiz
+
+Which of these is NOT a way to select the `name` and `n` columns together?
+
+```{r}
+select(babynames, -c(year, sex, prop))
+select(babynames, name:n)
+select(babynames, starts_with("n"))
+select(babynames, ends_with("n"))
+```
+
+## Your Turn 2
+
+Use `filter`, `babynames`, and the logical operators to find:
+
+* All of the names where prop is greater than or equal to 0.08  
+* All the years the name "Judith" appeared in the top 500 names.    
+
+```{r}
+
+```
+
+## Your Turn 3
+
+Use Boolean operators to return only the rows that contain:
+
+* _Boys_ named Sue  
+* Names that were used by exactly 15 or 16 children in 1880  
+* Names that are one of Acura, Lexus, or Yugo
+
+```{r}
+
+```
+
+## Help Me
+
+What is the smallest value of n?
+What is the largest?
+
+```{r}
+
+```
+
+## Your Turn 4
+
+Use `%>%` or `|>` to write a sequence of functions that: 
+
+1. Filters babynames to just the girls that were born in 2023, *then...*  
+2. Selects the `name` and `n` columns, *then...*  
+3. Arranges the results so that the most popular names are near the top.
+
+```{r}
+
+
+```
+
+## Your Turn 5
+
+1. Trim `babynames` to just the rows that contain **your** `name` and choose an option for `sex`.   
+2. Trim the result to just the columns that will appear in your graph (not strictly necessary, but useful practice)  
+3. Plot the results as a line graph with `year` on the x axis and `prop` on the y axis
+4. Update the labels and titles  
+5. Save your graph as "yourname.png" to submit for your preview work.  
+
+```{r}
+
+
+
+```
+
+
+
+## Preview
+
+Creating new variables or calculating summaries of existing variables is often useful when answering research questions.  
+
+```{r}
+#| label: preview-summaries 
+
+babynames %>% 
+  filter(name == "Jordan") |> 
+  group_by(year) |> 
+  summarise(total_prop = sum(prop)) |> 
+  ggplot() +
+    geom_line(mapping = aes(x = year, y = total_prop), size = 1) +
+  labs(x = "Year", 
+       y = "Proportion of US Births that Year",
+       title = "Popularity of \"Jordan\" in the US Since 1880") +
+  theme_light()
+```
+
+
+
+
+
+***
+
+# Take aways
+
+* Extract variables with `select()`  
+* Extract cases with `filter()`  
+* Arrange cases, with `arrange()`  
+
+
