@@ -33,18 +33,19 @@ babynames <- read_csv("babynames_500.csv")
 Alter the code to select just the `n` column:
 
 ```{r}
-select(babynames, name, prop)
+select(babynames, n)
 ```
 
 ## Quiz
 
 Which of these is NOT a way to select the `name` and `n` columns together?
+> Answer: `select(babynames, ends_with("n"))` will not get us `name` and `n` columns. The rest will work.
 
 ```{r}
-select(babynames, -c(year, sex, prop))
-select(babynames, name:n)
-select(babynames, starts_with("n"))
-select(babynames, ends_with("n"))
+select(babynames, -c(year, sex, prop)) #-c select every column but...
+select(babynames, name:n) #x:y select a range of columns
+select(babynames, starts_with("n")) #select  columns starting with...
+select(babynames, ends_with("n")) #select columns ending with...
 ```
 
 ## Your Turn 2
@@ -55,7 +56,10 @@ Use `filter`, `babynames`, and the logical operators to find:
 * All the years the name "Judith" appeared in the top 500 names.    
 
 ```{r}
+filter(babynames, name => 0.08)
+filter(babynames, name == "Judith")
 
+filter(babynames, name == "Judith" & year == 1950)
 ```
 
 ## Your Turn 3
@@ -67,7 +71,11 @@ Use Boolean operators to return only the rows that contain:
 * Names that are one of Acura, Lexus, or Yugo
 
 ```{r}
+filter(babynames, name == "Sue", sex == "M")
+filter(babynames, (n == 15 | n == 16) & year == 1880) 
+filter(babynames, name == "Acura" | name == "Lexus" | name == "Yugo")
 
+filter(babynames, n %in% c(15:18))
 ```
 
 ## Help Me
@@ -76,7 +84,8 @@ What is the smallest value of n?
 What is the largest?
 
 ```{r}
-
+arrange(babynames, n) #smallest = 12
+arrange(babynames, desc(n)) #largest = 99693
 ```
 
 ## Your Turn 4
@@ -88,7 +97,10 @@ Use `%>%` or `|>` to write a sequence of functions that:
 3. Arranges the results so that the most popular names are near the top.
 
 ```{r}
-
+babynames |> 
+  filter(sex == "F", year == 2023) |> 
+  select(name, n) |> 
+  arrange(n)
 
 ```
 
@@ -101,9 +113,21 @@ Use `%>%` or `|>` to write a sequence of functions that:
 5. Save your graph as "yourname.png" to submit for your preview work.  
 
 ```{r}
+babynames |>
+  filter(name == "Sam", 
+         sex == "M") |> 
+  select(year, 
+         prop) |> 
+  ggplot() +
+  geom_line(aes(x = year, 
+                y = prop),
+            color = "#e63946") +
+  theme_minimal() +
+  labs(x = "Year",
+       y = "Proportion of US Names \nIdentified as Male",
+       title = "Popularity of the Name \"Sam\" for Males")
 
-
-
+ggsave("popularity-of-sam-graph.png", width = 6, height = 4)
 ```
 
 
